@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="姓名打分、智能起名、传统卦象与重名风险预测工具">
+  <title>拾名 · 好名字，好人生</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="拾名首页">
+      <span class="brand-mark">拾</span>
+      <span>拾名<small>GOOD NAME · GOOD LIFE</small></span>
+    </a>
+    <nav aria-label="主导航">
+      <button class="nav-link active" data-page="home">首页</button>
+      <button class="nav-link" data-page="score">姓名评分</button>
+      <button class="nav-link" data-page="naming">智能起名</button>
+      <button class="nav-link" data-page="population">重名风险</button>
+    </nav>
+    <button class="nav-cta" data-go="score">免费测名</button>
+  </header>
+
+  <main>
+    <section class="page active" id="home">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">东方姓名文化 · 现代数据表达</p>
+          <h1>一笔一画有来处，<br><em>一名一生皆可期。</em></h1>
+          <p class="hero-text">从音、形、义与传统数理多个维度，读懂名字，找到更合适的表达。</p>
+          <div class="hero-actions">
+            <button class="primary" data-go="score">开始姓名评分 <span>→</span></button>
+            <button class="text-button" data-go="naming">为宝宝起名 <span>↗</span></button>
+          </div>
+          <div class="trust"><span>✓ 无需注册</span><span>✓ 即时生成</span><span>✓ 隐私保护</span></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="seal seal-one">名</div><div class="seal seal-two">和</div>
+          <div class="sun"></div><div class="mountain m1"></div><div class="mountain m2"></div>
+          <div class="ink-word">好名</div><div class="ink-sub">承古意 · 启新生</div>
+        </div>
+      </div>
+      <div class="feature-grid">
+        <article data-go="score"><span class="feature-no">01</span><div class="icon">名</div><h3>姓名评分</h3><p>多维评估，给出清晰的优化建议</p><b>立即测算 →</b></article>
+        <article data-go="naming"><span class="feature-no">02</span><div class="icon">字</div><h3>智能起名</h3><p>结合姓氏与偏好，生成十组佳名</p><b>获取好名 →</b></article>
+        <article data-go="population"><span class="feature-no">03</span><div class="icon">众</div><h3>重名风险</h3><p>按姓氏和名字特征评估重名风险</p><b>立即评估 →</b></article>
+      </div>
+    </section>
+
+    <section class="page tool-page" id="score">
+      <div class="tool-intro"><p class="eyebrow">NAME EVALUATION</p><h2>姓名评分</h2><p>输入基本信息，从音韵、字形、寓意、五行与卦象维度综合分析。</p></div>
+      <div class="tool-layout">
+        <form class="card form-card" id="score-form">
+          <label>姓名<input name="name" required maxlength="4" placeholder="请输入中文姓名"></label>
+          <div class="row"><label>出生日期<input name="birth" type="date" required></label><label>出生时辰<select name="birth_time" required><option value="">请选择时辰</option><option value="23:00">子时（23:00–00:59）</option><option value="01:00">丑时（01:00–02:59）</option><option value="03:00">寅时（03:00–04:59）</option><option value="05:00">卯时（05:00–06:59）</option><option value="07:00">辰时（07:00–08:59）</option><option value="09:00">巳时（09:00–10:59）</option><option value="11:00">午时（11:00–12:59）</option><option value="13:00">未时（13:00–14:59）</option><option value="15:00">申时（15:00–16:59）</option><option value="17:00">酉时（17:00–18:59）</option><option value="19:00">戌时（19:00–20:59）</option><option value="21:00">亥时（21:00–22:59）</option></select></label></div>
+          <label>性别<select name="gender"><option>男</option><option>女</option><option>不限定</option></select></label>
+          <button class="primary wide">查看评分</button>
+        </form>
+        <div class="card result empty" id="score-result"><span class="empty-symbol">名</span><h3>等待测算</h3><p>填写信息后，这里将展示姓名综合分析。</p></div>
+      </div>
+    </section>
+
+    <section class="page tool-page" id="naming">
+      <div class="tool-intro"><p class="eyebrow">SMART NAMING</p><h2>智能起名</h2><p>好名字不只悦耳，也应与姓氏、性别和时代气质相得益彰。</p></div>
+      <div class="tool-layout">
+        <form class="card form-card" id="naming-form">
+          <label>姓氏<input name="surname" required maxlength="2" placeholder="例如：林"></label>
+          <div class="row"><label>出生日期<input name="birth" type="date" required></label><label>出生时辰<select name="birth_time" required><option value="">请选择时辰</option><option value="23:00">子时（23:00–00:59）</option><option value="01:00">丑时（01:00–02:59）</option><option value="03:00">寅时（03:00–04:59）</option><option value="05:00">卯时（05:00–06:59）</option><option value="07:00">辰时（07:00–08:59）</option><option value="09:00">巳时（09:00–10:59）</option><option value="11:00">午时（11:00–12:59）</option><option value="13:00">未时（13:00–14:59）</option><option value="15:00">申时（15:00–16:59）</option><option value="17:00">酉时（17:00–18:59）</option><option value="19:00">戌时（19:00–20:59）</option><option value="21:00">亥时（21:00–22:59）</option></select></label></div>
+          <label>性别<select name="gender"><option value="boy">男孩</option><option value="girl">女孩</option><option value="neutral">不限定</option></select></label>
+          <label>期望气质<select name="style"><option value="elegant">清雅从容</option><option value="bright">明朗大气</option><option value="learned">博学睿智</option></select></label>
+          <label>优先用字（可选）<input name="fixed_char" maxlength="1" placeholder="尽量包含该字，例如：安"></label>
+          <button class="primary wide">生成十组好名</button>
+        </form>
+        <div class="card result empty" id="naming-result"><span class="empty-symbol">字</span><h3>佳名待寻</h3><p>输入姓氏和偏好，为你生成名字与含义。</p></div>
+      </div>
+    </section>
+
+    <section class="page tool-page" id="population">
+      <div class="tool-intro"><p class="eyebrow">DUPLICATE NAME RISK</p><h2>重名风险预测</h2><p>根据姓氏常见度、名字结构与高频用字，评估组合层面的重名风险。</p></div>
+      <form class="search-card card" id="population-form"><input name="name" required maxlength="6" placeholder="输入完整姓名"><button class="primary">评估重名风险</button></form>
+      <div class="population-result" id="population-result"></div>
+      <p class="data-note">数据说明：结果是透明规则产生的风险等级，不是公安人口统计，也不提供估算人数。</p>
+    </section>
+  </main>
+  <footer><span>拾名 SHIMING</span><p>传统文化的现代诠释 · 测算结果仅供参考</p><span>© 2026</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
