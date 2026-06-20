@@ -2,3 +2,6 @@ __pycache__/
 *.py[cod]
 shiming.db
 python-installer.exe
+.tools/
+gh*.zip
+gh*.msi
