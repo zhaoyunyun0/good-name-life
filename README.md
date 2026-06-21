@@ -14,6 +14,7 @@
 - 候选管理：收藏候选、并排对比、导出 JSON 和打印报告。
 - 规则版本：可切换“缺失补足/月令平衡”和“综合均衡/五行侧重”。
 - 隐私控制：查询历史默认不保存，用户可主动开启本地历史记录。
+- AI 姓名顾问：可选的语义、气质、谐音歧义和文化意象分析，不改变确定性评分。
 - 重名风险：根据姓氏常见度、名字结构和高频用字输出透明风险等级，不伪造人口数量。
 
 ## 快速启动
@@ -62,6 +63,8 @@ $env:SHIMING_CHAR_API_KEY="your-api-key"
 $env:SHIMING_POPULATION_API_URL="https://provider.example/population"
 $env:SHIMING_POPULATION_API_KEY="your-api-key"
 $env:SHIMING_NAME_CORPUS="D:\data\authorized-name-corpus.json"
+$env:OPENAI_API_KEY="your-openai-api-key"
+$env:SHIMING_AI_MODEL="gpt-5.5"
 python app.py
 ```
 
@@ -99,6 +102,8 @@ python app.py
 | POST | `/api/score` | 姓名评分 |
 | POST | `/api/names` | 智能起名 |
 | POST | `/api/population` | 重名风险预测 |
+| GET | `/api/ai/status` | AI 姓名顾问配置状态 |
+| POST | `/api/ai/analyze` | AI 姓名语义体检 |
 
 姓名评分请求示例：
 
@@ -133,3 +138,6 @@ python app.py
 - 若接入在线字典或人口数据，必须使用合法授权 API，并在结果中标明数据来源。
 
 更完整的需求、用户流程和后续规划见 [PRODUCT_DESIGN.md](PRODUCT_DESIGN.md)。
+
+AI 语义分析、约束式起名和对话顾问的完整方案见 [AI_FEATURE_DESIGN.md](AI_FEATURE_DESIGN.md)。
+AI 语义体检已接入 OpenAI Responses API；未配置 `OPENAI_API_KEY` 时保持禁用且不生成模拟分析。约束式 AI 起名和多轮对话仍按设计分阶段实现。

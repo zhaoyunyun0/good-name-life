@@ -29,6 +29,11 @@ CHAR_API_KEY = os.getenv("SHIMING_CHAR_API_KEY", "").strip()
 POPULATION_API_URL = os.getenv("SHIMING_POPULATION_API_URL", "").strip()
 POPULATION_API_KEY = os.getenv("SHIMING_POPULATION_API_KEY", "").strip()
 NAME_CORPUS_PATH = os.getenv("SHIMING_NAME_CORPUS", "").strip()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+AI_API_URL = os.getenv("SHIMING_AI_API_URL", "https://api.openai.com/v1/responses").strip()
+AI_MODEL = os.getenv("SHIMING_AI_MODEL", "gpt-5.5").strip()
+AI_TIMEOUT = int(os.getenv("SHIMING_AI_TIMEOUT", "30"))
+AI_ENABLED = bool(OPENAI_API_KEY) and os.getenv("SHIMING_AI_ENABLED", "true").lower() in ("1", "true", "yes")
 CHINESE_NAME = re.compile(r"^[\u3400-\u9fff·]{2,6}$")
 SURNAME = re.compile(r"^[\u3400-\u9fff]{1,2}$")
 
@@ -538,10 +543,127 @@ def population(data: dict) -> dict:
     return result
 
 
+AI_ANALYSIS_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "summary": {"type": "string"},
+        "semantic_analysis": {"type": "string"},
+        "style_tags": {"type": "array", "items": {"type": "string"}},
+        "era_impression": {"type": "string"},
+        "pronunciation_review": {"type": "string"},
+        "cultural_imagery": {"type": "string"},
+        "risk_level": {"type": "string", "enum": ["low", "medium", "high"]},
+        "risk_items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "type": {"type": "string"},
+                    "description": {"type": "string"},
+                    "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+                },
+                "required": ["type", "description", "confidence"],
+            },
+        },
+        "source_notes": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["summary", "semantic_analysis", "style_tags", "era_impression",
+                 "pronunciation_review", "cultural_imagery", "risk_level", "risk_items",
+                 "source_notes", "warnings"],
+}
+
+
+AI_SYSTEM_PROMPT = """你是中文姓名语言顾问，不是命理计算器。四柱、五行、笔画、卦象和分数是只读事实，不得修改或重新计算。
+分析姓名的整体语义、语言气质、时代感、普通话读音、常见谐音歧义和文化意象。
+不得声称姓名决定命运、财富、健康、婚姻或人生结果。不得编造古籍出处；无法核实出处时必须称为“意象联想”。
+风险判断应克制，给出置信度；没有明显风险时返回空 risk_items。所有输出使用简体中文并符合给定 JSON Schema。"""
+
+
+def ai_status() -> dict:
+    return {"enabled": AI_ENABLED, "provider": "OpenAI Responses API" if AI_ENABLED else "未配置",
+            "model": AI_MODEL if AI_ENABLED else "", "sends_raw_birth": False,
+            "message": "AI 姓名顾问可用" if AI_ENABLED else "请配置 OPENAI_API_KEY 后启用 AI 姓名顾问"}
+
+
+def _extract_response_text(body: dict) -> str:
+    if isinstance(body.get("output_text"), str):
+        return body["output_text"]
+    for output in body.get("output", []):
+        for content in output.get("content", []):
+            if content.get("type") == "refusal":
+                raise ValueError(f"AI 拒绝分析：{content.get('refusal', '请求不适用')}")
+            if content.get("type") == "output_text" and isinstance(content.get("text"), str):
+                return content["text"]
+    raise ValueError("AI 服务未返回可解析的结构化文本")
+
+
+def _validate_ai_analysis(result: dict) -> None:
+    required_strings = ("summary", "semantic_analysis", "era_impression", "pronunciation_review", "cultural_imagery")
+    if not isinstance(result, dict) or any(not isinstance(result.get(key), str) for key in required_strings):
+        raise ValueError("AI 分析结果字段不完整")
+    if result.get("risk_level") not in ("low", "medium", "high"):
+        raise ValueError("AI 风险等级不正确")
+    for key in ("style_tags", "risk_items", "source_notes", "warnings"):
+        if not isinstance(result.get(key), list):
+            raise ValueError("AI 分析结果列表字段不正确")
+
+
+def analyze_name_with_ai(data: dict) -> dict:
+    if not data.get("_ai_consent"):
+        raise ValueError("使用 AI 姓名顾问前需要明确授权")
+    if not AI_ENABLED:
+        raise ValueError("AI 姓名顾问未配置：请设置 OPENAI_API_KEY")
+    deterministic = score_name({**data, "_store_history": False})
+    facts = {
+        "name": deterministic["name"],
+        "pillars": deterministic["bazi"]["pillars"],
+        "element_counts": deterministic["bazi"]["counts"],
+        "rule": deterministic["bazi"]["rule"],
+        "score": deterministic["score"],
+        "metrics": deterministic["metrics"],
+        "name_elements": deterministic["name_elements"],
+        "trigram": deterministic["trigram"]["name"],
+        "tones": deterministic["calculation"]["tones"],
+        "strokes": deterministic["calculation"]["strokes"],
+    }
+    request_body = {
+        "model": AI_MODEL,
+        "input": [
+            {"role": "system", "content": [{"type": "input_text", "text": AI_SYSTEM_PROMPT}]},
+            {"role": "user", "content": [{"type": "input_text", "text": "请基于以下只读事实进行姓名语义体检：\n" + json.dumps(facts, ensure_ascii=False)}]},
+        ],
+        "text": {"format": {"type": "json_schema", "name": "name_semantic_analysis",
+                            "strict": True, "schema": AI_ANALYSIS_SCHEMA}},
+    }
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {OPENAI_API_KEY}"}
+    try:
+        with urlopen(Request(AI_API_URL, data=json.dumps(request_body, ensure_ascii=False).encode("utf-8"),
+                             headers=headers, method="POST"), timeout=AI_TIMEOUT) as response:
+            body = json.loads(response.read().decode("utf-8"))
+        analysis = json.loads(_extract_response_text(body))
+        _validate_ai_analysis(analysis)
+    except HTTPError as exc:
+        raise ValueError(f"AI 服务请求失败（HTTP {exc.code}）") from exc
+    except (URLError, TimeoutError) as exc:
+        raise ValueError("AI 服务连接超时或不可用") from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError("AI 服务返回的结构化结果无法解析") from exc
+    result = {"name": deterministic["name"], "analysis": analysis,
+              "meta": {"provider": "OpenAI Responses API", "model": AI_MODEL,
+                       "raw_birth_sent": False, "deterministic_score": deterministic["score"]},
+              "disclaimer": "AI 仅提供语言与文化语境辅助分析，不改变八字、五行和姓名评分。"}
+    save_history("ai_analysis", deterministic["name"], result, bool(data.get("_store_history")))
+    return result
+
+
 ROUTES = {
     "/api/score": score_name,
     "/api/names": generate_names,
     "/api/population": population,
+    "/api/ai/analyze": analyze_name_with_ai,
 }
 
 
@@ -559,8 +681,12 @@ class AppHandler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self) -> None:
-        if urlparse(self.path).path == "/api/health":
+        path = urlparse(self.path).path
+        if path == "/api/health":
             self.send_json({"ok": True, "service": "拾名", "time": datetime.now().isoformat(timespec="seconds")})
+            return
+        if path == "/api/ai/status":
+            self.send_json({"ok": True, "data": ai_status()})
             return
         super().do_GET()
 
@@ -576,6 +702,7 @@ class AppHandler(SimpleHTTPRequestHandler):
                 raise ValueError("请求内容为空或过大")
             data = json.loads(self.rfile.read(length).decode("utf-8"))
             data["_store_history"] = self.headers.get("X-Store-History", "false").lower() == "true"
+            data["_ai_consent"] = self.headers.get("X-AI-Consent", "false").lower() == "true"
             self.send_json({"ok": True, "data": handler(data)})
         except (ValueError, json.JSONDecodeError) as exc:
             self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)

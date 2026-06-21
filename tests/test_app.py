@@ -1,6 +1,8 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import app
 
@@ -46,6 +48,31 @@ class ShimingTests(unittest.TestCase):
         result = app.population({"name": "张伟"})
         self.assertEqual("risk", result["mode"])
         self.assertNotIn("total", result)
+
+    def test_ai_analysis_is_structured_and_omits_raw_birth(self):
+        analysis = {
+            "summary": "整体清朗自然。", "semantic_analysis": "语义协调。",
+            "style_tags": ["清雅"], "era_impression": "现代中带有古典感。",
+            "pronunciation_review": "声调有变化。", "cultural_imagery": "属于意象联想。",
+            "risk_level": "low", "risk_items": [], "source_notes": [], "warnings": [],
+        }
+
+        class FakeResponse:
+            def __enter__(self): return self
+            def __exit__(self, *_): return False
+            def read(self): return json.dumps({"output_text": json.dumps(analysis, ensure_ascii=False)}).encode()
+
+        def fake_urlopen(request, timeout):
+            payload = request.data.decode("utf-8")
+            self.assertNotIn("2023-01-25", payload)
+            return FakeResponse()
+
+        payload = {**self.base, "name": "曹安宁", "gender": "女", "_ai_consent": True}
+        with patch.object(app, "AI_ENABLED", True), patch.object(app, "OPENAI_API_KEY", "test-key"), \
+             patch.object(app, "urlopen", fake_urlopen):
+            result = app.analyze_name_with_ai(payload)
+        self.assertEqual("low", result["analysis"]["risk_level"])
+        self.assertFalse(result["meta"]["raw_birth_sent"])
 
 
 if __name__ == "__main__":

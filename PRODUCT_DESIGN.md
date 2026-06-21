@@ -416,6 +416,7 @@ SHIMING_POPULATION_API_KEY
 - 隐私开关及按需 SQLite 历史。
 - 在线汉字、姓名语料和人口 API 适配层。
 - 自动回归测试、README 和 GitHub 版本管理。
+- 第一阶段 AI 姓名顾问：语义、气质、谐音歧义和文化意象分析。
 
 ### 等待外部资源
 
@@ -431,3 +432,4 @@ SHIMING_POPULATION_API_KEY
 4. 增加收藏批量清空、排序和多版本横向对比。
 5. 增加可下载的正式 PDF 报告。
 6. 增加 API 限流、结构化日志和运行监控。
+7. 按 [AI_FEATURE_DESIGN.md](AI_FEATURE_DESIGN.md) 分阶段引入 AI 姓名顾问。

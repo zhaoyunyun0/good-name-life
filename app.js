@@ -1,5 +1,5 @@
 const pages=[...document.querySelectorAll('.page')],navLinks=[...document.querySelectorAll('.nav-link')];
-let lastScoreInput=null,lastNamingInput=null,generatedCandidates=new Map();
+let lastScoreInput=null,lastNamingInput=null,generatedCandidates=new Map(),aiStatus={enabled:false,message:'AI 状态检查中'};
 const compoundSurnames=['欧阳','司马','上官','诸葛','东方','皇甫','尉迟','公孙','慕容','司徒'];
 const inferSurname=name=>compoundSurnames.includes(name.slice(0,2))?name.slice(0,2):name.slice(0,1);
 const toNamingGender=value=>value==='男'?'boy':value==='女'?'girl':'neutral';
@@ -12,11 +12,12 @@ historyToggle.addEventListener('change',()=>localStorage.setItem('shiming-histor
 function showPage(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));navLinks.forEach(n=>n.classList.toggle('active',n.dataset.page===id));scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',`#${id}`)}
 document.addEventListener('click',e=>{const target=e.target.closest('[data-page],[data-go]');if(target)showPage(target.dataset.page||target.dataset.go)});
 const hash=location.hash.slice(1);if(pages.some(p=>p.id===hash))showPage(hash);
+fetch('/api/ai/status').then(r=>r.json()).then(r=>{if(r.ok)aiStatus=r.data}).catch(()=>{});
 
-async function api(path,payload,button){
+async function api(path,payload,button,extraHeaders={}){
   const old=button?.textContent;if(button){button.disabled=true;button.textContent='正在计算…'}
   try{
-    const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json','X-Store-History':String(historyToggle.checked)},body:JSON.stringify(payload)});
+    const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json','X-Store-History':String(historyToggle.checked),...extraHeaders},body:JSON.stringify(payload)});
     const json=await response.json();if(!response.ok||!json.ok)throw new Error(json.error||'请求失败');return json.data;
   }catch(error){alert(error.message==='Failed to fetch'?'无法连接 Python 服务，请使用 python app.py 启动程序。':error.message);throw error}
   finally{if(button){button.disabled=false;button.textContent=old}}
@@ -29,7 +30,7 @@ document.querySelector('#score-form').addEventListener('submit',async e=>{
     const d=await api('/api/score',lastScoreInput,button),metrics=Object.entries(d.metrics);
     const counts=Object.entries(d.bazi.counts).map(([k,v])=>`${k}${v}`).join(' · '),missing=d.bazi.missing.length?d.bazi.missing.join('、'):'无';
     const sources=Object.entries(d.calculation.character_sources).map(([char,source])=>`${char}：${source}`).join('；');
-    const target=document.querySelector('#score-result');target.className='card result';target.innerHTML=`<div class="score-head"><div class="score-ring"><div><b>${d.score}</b><small>/ 100</small></div></div><div><p class="eyebrow">综合评价</p><h3>${esc(d.name)} · ${esc(d.grade)}</h3><p>${esc(d.summary)}</p></div></div><div class="bazi-panel"><b>四柱八字</b><span>${d.bazi.pillars.map(esc).join('　')}</span><small>${esc(d.bazi.lunar_date)} · 日主属${d.bazi.day_master}</small><small>五行计数：${counts}　缺失：${missing}</small><small>规则：${esc(d.bazi.rule)} · 评分版本：${esc(d.calculation.score_version)}</small><small>字库来源：${esc(sources)}</small></div><div class="metrics">${metrics.map(([name,value])=>`<div class="metric"><b>${value}</b><small>${name}</small></div>`).join('')}</div><p class="analysis"><b>周易卦象：</b>${esc(d.trigram.name)}（上卦${d.trigram.upper}、下卦${d.trigram.lower}）</p><p class="analysis"><b>综合建议：</b>${esc(d.advice)}</p><button class="compare-button" data-action="to-naming">按此生辰智能起名 <span>→</span></button>`;
+    const target=document.querySelector('#score-result');target.className='card result';target.innerHTML=`<div class="score-head"><div class="score-ring"><div><b>${d.score}</b><small>/ 100</small></div></div><div><p class="eyebrow">综合评价</p><h3>${esc(d.name)} · ${esc(d.grade)}</h3><p>${esc(d.summary)}</p></div></div><div class="bazi-panel"><b>四柱八字</b><span>${d.bazi.pillars.map(esc).join('　')}</span><small>${esc(d.bazi.lunar_date)} · 日主属${d.bazi.day_master}</small><small>五行计数：${counts}　缺失：${missing}</small><small>规则：${esc(d.bazi.rule)} · 评分版本：${esc(d.calculation.score_version)}</small><small>字库来源：${esc(sources)}</small></div><div class="metrics">${metrics.map(([name,value])=>`<div class="metric"><b>${value}</b><small>${name}</small></div>`).join('')}</div><p class="analysis"><b>周易卦象：</b>${esc(d.trigram.name)}（上卦${d.trigram.upper}、下卦${d.trigram.lower}）</p><p class="analysis"><b>综合建议：</b>${esc(d.advice)}</p><section class="ai-panel"><div><p class="eyebrow">AI NAME CONSULTANT</p><h3>AI 姓名顾问</h3><small>语义、气质、谐音和文化意象辅助分析，不改变当前分数。</small></div><button data-action="ai-score" class="ai-button">AI 语义体检</button><div class="ai-result" id="ai-score-result"></div></section><button class="compare-button" data-action="to-naming">按此生辰智能起名 <span>→</span></button>`;
   }catch(_){}
 });
 
@@ -39,7 +40,7 @@ document.querySelector('#naming-form').addEventListener('submit',async e=>{
     const payload={...lastNamingInput,nonce:Date.now().toString()},d=await api('/api/names',payload,e.submitter),target=document.querySelector('#naming-result');
     generatedCandidates=new Map(d.names.map(item=>[item.name,item]));target.className='card result';
     const missing=d.bazi.missing.length?d.bazi.missing.join('、'):'无',counts=Object.entries(d.bazi.counts).map(([k,v])=>`<span><i>${k}</i><b>${v}</b></span>`).join('');
-    target.innerHTML=`<div class="naming-analysis"><p class="eyebrow">生辰八字与五行分析</p><h3>${d.bazi.pillars.map(esc).join('　')}</h3><p class="lunar-date">${esc(d.bazi.lunar_date)} · 日主属${d.bazi.day_master} · 月令属${d.bazi.seasonal}</p><div class="element-counts">${counts}</div><div class="analysis-copy"><b>分析结论：五行缺失 ${missing}</b><p>${esc(d.strategy.analysis)}</p><small>规则：${esc(d.bazi.rule)} · 评分：${esc(d.strategy.score_version)} · 优先：${d.strategy.recommended.join('、')}</small><small class="source-line">姓名语料：${esc(d.strategy.corpus_source)}</small></div></div><p class="eyebrow name-list-title">结合以上分析推荐十组名字</p><div class="name-grid">${d.names.map(n=>`<div class="name-item"><b>${esc(n.name)}</b><span>${n.score}</span><p>${esc(n.meaning)}</p><small>用字五行：${n.elements.join('、')} · ${esc(n.trigram)}</small>${n.ambiguity_warnings.length?`<small class="warning-line">歧义提示：${n.ambiguity_warnings.map(esc).join('、')}</small>`:''}<div class="name-actions"><button class="name-score-link" data-action="score-name" data-score-name="${esc(n.name)}">查看评分 →</button><button class="name-score-link" data-action="favorite-name" data-score-name="${esc(n.name)}">＋ 收藏</button></div></div>`).join('')}</div>`;
+    target.innerHTML=`<div class="naming-analysis"><p class="eyebrow">生辰八字与五行分析</p><h3>${d.bazi.pillars.map(esc).join('　')}</h3><p class="lunar-date">${esc(d.bazi.lunar_date)} · 日主属${d.bazi.day_master} · 月令属${d.bazi.seasonal}</p><div class="element-counts">${counts}</div><div class="analysis-copy"><b>分析结论：五行缺失 ${missing}</b><p>${esc(d.strategy.analysis)}</p><small>规则：${esc(d.bazi.rule)} · 评分：${esc(d.strategy.score_version)} · 优先：${d.strategy.recommended.join('、')}</small><small class="source-line">姓名语料：${esc(d.strategy.corpus_source)}</small></div></div><p class="eyebrow name-list-title">结合以上分析推荐十组名字</p><div class="name-grid">${d.names.map((n,i)=>`<div class="name-item"><b>${esc(n.name)}</b><span>${n.score}</span><p>${esc(n.meaning)}</p><small>用字五行：${n.elements.join('、')} · ${esc(n.trigram)}</small>${n.ambiguity_warnings.length?`<small class="warning-line">歧义提示：${n.ambiguity_warnings.map(esc).join('、')}</small>`:''}<div class="name-actions"><button class="name-score-link" data-action="score-name" data-score-name="${esc(n.name)}">查看评分 →</button><button class="name-score-link" data-action="favorite-name" data-score-name="${esc(n.name)}">＋ 收藏</button><button class="name-score-link" data-action="ai-candidate" data-score-name="${esc(n.name)}" data-ai-target="ai-candidate-${i}">AI 分析</button></div><div class="ai-result compact" id="ai-candidate-${i}"></div></div>`).join('')}</div>`;
   }catch(_){}
 });
 
@@ -51,6 +52,21 @@ function renderFavorites(){
   target.innerHTML=items.map(item=>`<article><b>${esc(item.name)}</b><span>${item.score}分</span><p>${esc(item.meaning)}</p><small>${item.elements.join('、')} · ${esc(item.input.birth)} · ${esc(item.input.birth_time)}</small><button data-action="remove-favorite" data-favorite-id="${esc(item.id)}">移除</button></article>`).join('');
 }
 renderFavorites();
+
+function ensureAiConsent(){
+  if(localStorage.getItem('shiming-ai-consent')==='true')return true;
+  const accepted=confirm('AI 语义体检会把当前姓名、四柱、五行计数和评分发送给模型服务。不会发送公历生日原值和精确出生时间。AI 结果仅供语言与文化语境参考。是否继续？');
+  if(accepted)localStorage.setItem('shiming-ai-consent','true');return accepted;
+}
+function renderAiAnalysis(target,d){
+  const a=d.analysis,riskLabel={low:'低',medium:'中',high:'高'}[a.risk_level]||a.risk_level;
+  target.innerHTML=`<div class="ai-analysis-head"><b>${esc(d.name)} · AI 辅助分析</b><span class="ai-risk ${a.risk_level}">歧义风险 ${riskLabel}</span></div><p class="ai-summary">${esc(a.summary)}</p><div class="ai-analysis-grid"><article><b>整体语义</b><p>${esc(a.semantic_analysis)}</p></article><article><b>文化意象</b><p>${esc(a.cultural_imagery)}</p></article><article><b>读音体验</b><p>${esc(a.pronunciation_review)}</p></article><article><b>气质与时代感</b><p>${a.style_tags.map(esc).join(' · ')}；${esc(a.era_impression)}</p></article></div>${a.risk_items.length?`<div class="ai-warnings"><b>谐音与歧义提示</b>${a.risk_items.map(item=>`<p>${esc(item.description)} <small>置信度：${esc(item.confidence)}</small></p>`).join('')}</div>`:'<p class="ai-safe">未发现需要特别提示的常见谐音歧义。</p>'}${a.source_notes.length?`<p class="ai-notes">来源说明：${a.source_notes.map(esc).join('；')}</p>`:''}${a.warnings.length?`<p class="ai-notes">注意：${a.warnings.map(esc).join('；')}</p>`:''}<small class="ai-disclaimer">${esc(d.disclaimer)} · ${esc(d.meta.provider)} · ${esc(d.meta.model)}</small>`;
+}
+async function runAiAnalysis(name,input,button,target){
+  if(!aiStatus.enabled){alert(aiStatus.message);return}
+  if(!ensureAiConsent())return;
+  try{target.innerHTML='<p class="ai-loading">AI 正在分析语义与常见语境…</p>';const d=await api('/api/ai/analyze',{...input,name},button,{'X-AI-Consent':'true'});renderAiAnalysis(target,d)}catch(_){target.innerHTML=''}
+}
 
 document.addEventListener('click',e=>{
   const action=e.target.closest('[data-action]');if(!action)return;
@@ -68,6 +84,8 @@ document.addEventListener('click',e=>{
     const blob=new Blob([JSON.stringify({product:'拾名',exported_at:new Date().toISOString(),candidates:getFavorites()},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='拾名候选报告.json';a.click();URL.revokeObjectURL(url);
   }
   if(action.dataset.action==='print-report')window.print();
+  if(action.dataset.action==='ai-score'&&lastScoreInput)runAiAnalysis(lastScoreInput.name,lastScoreInput,action,document.querySelector('#ai-score-result'));
+  if(action.dataset.action==='ai-candidate'&&lastNamingInput){const target=document.getElementById(action.dataset.aiTarget);runAiAnalysis(action.dataset.scoreName,{...lastNamingInput,gender:toScoreGender(lastNamingInput.gender)},action,target)}
 });
 
 document.querySelector('#population-form').addEventListener('submit',async e=>{
