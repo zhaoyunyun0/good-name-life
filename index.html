@@ -17,6 +17,7 @@
       <button class="nav-link active" data-page="home">首页</button>
       <button class="nav-link" data-page="score">姓名评分</button>
       <button class="nav-link" data-page="naming">智能起名</button>
+      <button class="nav-link ai-nav" data-page="ai">AI 姓名顾问</button>
       <button class="nav-link" data-page="population">重名风险</button>
     </nav>
     <button class="nav-cta" data-go="score">免费测名</button>
@@ -79,6 +80,23 @@
         <div class="card result empty" id="naming-result"><span class="empty-symbol">字</span><h3>佳名待寻</h3><p>输入姓氏和偏好，为你生成名字与含义。</p></div>
       </div>
       <section class="favorites-panel card" id="favorites-panel"><div class="favorites-head"><div><p class="eyebrow">CANDIDATE COMPARISON</p><h3>候选收藏与对比</h3></div><div><button type="button" data-action="export-favorites">导出 JSON</button><button type="button" data-action="print-report">打印报告</button></div></div><div class="favorites-grid" id="favorites-grid"><p class="favorites-empty">尚未收藏候选名字。</p></div></section>
+    </section>
+
+    <section class="page tool-page" id="ai">
+      <div class="tool-intro"><p class="eyebrow">AI NAME CONSULTANT</p><h2>AI 姓名顾问</h2><p>从整体语义、气质、时代感、谐音歧义和文化意象理解名字，不改变确定性评分。</p></div>
+      <div class="ai-status-banner" id="ai-status-banner">正在检查 AI 服务状态…</div>
+      <div class="tool-layout ai-tool-layout">
+        <form class="card form-card" id="ai-form">
+          <label>姓名<input name="name" required maxlength="6" placeholder="请输入中文姓名"></label>
+          <div class="row"><label>出生日期<input name="birth" type="date" required></label><label>出生时辰<select name="birth_time" required><option value="">请选择时辰</option><option value="23:00">子时（23:00–00:59）</option><option value="01:00">丑时（01:00–02:59）</option><option value="03:00">寅时（03:00–04:59）</option><option value="05:00">卯时（05:00–06:59）</option><option value="07:00">辰时（07:00–08:59）</option><option value="09:00">巳时（09:00–10:59）</option><option value="11:00">午时（11:00–12:59）</option><option value="13:00">未时（13:00–14:59）</option><option value="15:00">申时（15:00–16:59）</option><option value="17:00">酉时（17:00–18:59）</option><option value="19:00">戌时（19:00–20:59）</option><option value="21:00">亥时（21:00–22:59）</option></select></label></div>
+          <label>性别<select name="gender"><option>男</option><option>女</option><option>不限定</option></select></label>
+          <label>五行规则<select name="rule_version"><option value="missing_v1">缺失补足 v1</option><option value="seasonal_v2">月令平衡 v2</option></select></label>
+          <label>评分版本<select name="score_version"><option value="balanced_v1">综合均衡 v1</option><option value="element_v2">五行侧重 v2</option></select></label>
+          <div class="ai-consent-note">提交后仅向模型发送姓名、四柱、五行计数和评分，不发送公历生日原值和精确出生时间。</div>
+          <button class="primary wide">开始 AI 语义体检</button>
+        </form>
+        <div class="card result empty ai-page-result" id="ai-page-result"><span class="empty-symbol">AI</span><h3>等待分析</h3><p>AI 结果与确定性评分分开显示，仅供语言和文化语境参考。</p></div>
+      </div>
     </section>
 
     <section class="page tool-page" id="population">

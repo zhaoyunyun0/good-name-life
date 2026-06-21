@@ -74,6 +74,15 @@ class ShimingTests(unittest.TestCase):
         self.assertEqual("low", result["analysis"]["risk_level"])
         self.assertFalse(result["meta"]["raw_birth_sent"])
 
+    def test_ai_features_live_in_dedicated_tab(self):
+        html = (app.ROOT / "index.html").read_text(encoding="utf-8")
+        script = (app.ROOT / "app.js").read_text(encoding="utf-8")
+        self.assertIn('data-page="ai"', html)
+        self.assertIn('id="ai-form"', html)
+        self.assertIn('id="ai-page-result"', html)
+        self.assertNotIn('id="ai-score-result"', script)
+        self.assertNotIn('ai-candidate-', script)
+
 
 if __name__ == "__main__":
     unittest.main()
