@@ -11,6 +11,9 @@
 - 五行分析：通过节气万年历排四柱，展示五行计数、缺失项和补益规则。
 - 优先用字：可指定一个优先汉字，在不破坏五行与质量要求的前提下尽量采用。
 - 双向比较：评分结果可一键进入起名；候选名可一键带参数返回评分。
+- 候选管理：收藏候选、并排对比、导出 JSON 和打印报告。
+- 规则版本：可切换“缺失补足/月令平衡”和“综合均衡/五行侧重”。
+- 隐私控制：查询历史默认不保存，用户可主动开启本地历史记录。
 - 重名风险：根据姓氏常见度、名字结构和高频用字输出透明风险等级，不伪造人口数量。
 
 ## 快速启动
@@ -47,7 +50,32 @@ good-name-life/
 └── .gitignore
 ```
 
-运行时会生成 `shiming.db` 保存功能调用历史，该文件已被 Git 忽略。
+查询历史默认关闭；用户主动开启后才会生成 `shiming.db`，该文件已被 Git 忽略。候选收藏保存在浏览器 `localStorage`。
+
+## 外部数据配置
+
+未配置授权外部数据时，程序保持现有内置字库和透明风险模型，不伪造在线结果。
+
+```powershell
+$env:SHIMING_CHAR_API_URL="https://provider.example/character"
+$env:SHIMING_CHAR_API_KEY="your-api-key"
+$env:SHIMING_POPULATION_API_URL="https://provider.example/population"
+$env:SHIMING_POPULATION_API_KEY="your-api-key"
+$env:SHIMING_NAME_CORPUS="D:\data\authorized-name-corpus.json"
+python app.py
+```
+
+汉字 API 请求为 `{ "char": "珩" }`，响应必须提供 `strokes`、`element`、`meaning`、`source`。人口 API 请求为 `{ "name": "张伟" }`，响应必须提供 `total`、`source`，可选 `male` 和 `female`。
+
+授权姓名语料格式：
+
+```json
+{
+  "source": "数据集名称与授权说明",
+  "bigrams": { "安宁": 120, "知远": 85 },
+  "ambiguous_terms": ["不雅谐音词"]
+}
+```
 
 ## 评分规则
 
