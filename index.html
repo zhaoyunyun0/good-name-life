@@ -56,8 +56,6 @@
           <label>姓名<input name="name" required maxlength="4" placeholder="请输入中文姓名"></label>
           <div class="row"><label>出生日期<input name="birth" type="date" required></label><label>出生时辰<select name="birth_time" required><option value="">请选择时辰</option><option value="23:00">子时（23:00–00:59）</option><option value="01:00">丑时（01:00–02:59）</option><option value="03:00">寅时（03:00–04:59）</option><option value="05:00">卯时（05:00–06:59）</option><option value="07:00">辰时（07:00–08:59）</option><option value="09:00">巳时（09:00–10:59）</option><option value="11:00">午时（11:00–12:59）</option><option value="13:00">未时（13:00–14:59）</option><option value="15:00">申时（15:00–16:59）</option><option value="17:00">酉时（17:00–18:59）</option><option value="19:00">戌时（19:00–20:59）</option><option value="21:00">亥时（21:00–22:59）</option></select></label></div>
           <label>性别<select name="gender"><option>男</option><option>女</option><option>不限定</option></select></label>
-          <label>五行规则<select name="rule_version"><option value="missing_v1">缺失补足 v1</option><option value="seasonal_v2">月令平衡 v2</option></select></label>
-          <label>评分版本<select name="score_version"><option value="balanced_v1">综合均衡 v1</option><option value="element_v2">五行侧重 v2</option></select></label>
           <button class="primary wide">查看评分</button>
         </form>
         <div class="card result empty" id="score-result"><span class="empty-symbol">名</span><h3>等待测算</h3><p>填写信息后，这里将展示姓名综合分析。</p></div>
@@ -73,8 +71,6 @@
           <label>性别<select name="gender"><option value="boy">男孩</option><option value="girl">女孩</option><option value="neutral">不限定</option></select></label>
           <label>期望气质<select name="style"><option value="elegant">清雅从容</option><option value="bright">明朗大气</option><option value="learned">博学睿智</option></select></label>
           <label>优先用字（可选）<input name="fixed_char" maxlength="1" placeholder="尽量包含该字，例如：安"></label>
-          <label>五行规则<select name="rule_version"><option value="missing_v1">缺失补足 v1</option><option value="seasonal_v2">月令平衡 v2</option></select></label>
-          <label>评分版本<select name="score_version"><option value="balanced_v1">综合均衡 v1</option><option value="element_v2">五行侧重 v2</option></select></label>
           <button class="primary wide">生成十组好名</button>
         </form>
         <div class="card result empty" id="naming-result"><span class="empty-symbol">字</span><h3>佳名待寻</h3><p>输入姓氏和偏好，为你生成名字与含义。</p></div>
@@ -90,8 +86,6 @@
           <label>姓名<input name="name" required maxlength="6" placeholder="请输入中文姓名"></label>
           <div class="row"><label>出生日期<input name="birth" type="date" required></label><label>出生时辰<select name="birth_time" required><option value="">请选择时辰</option><option value="23:00">子时（23:00–00:59）</option><option value="01:00">丑时（01:00–02:59）</option><option value="03:00">寅时（03:00–04:59）</option><option value="05:00">卯时（05:00–06:59）</option><option value="07:00">辰时（07:00–08:59）</option><option value="09:00">巳时（09:00–10:59）</option><option value="11:00">午时（11:00–12:59）</option><option value="13:00">未时（13:00–14:59）</option><option value="15:00">申时（15:00–16:59）</option><option value="17:00">酉时（17:00–18:59）</option><option value="19:00">戌时（19:00–20:59）</option><option value="21:00">亥时（21:00–22:59）</option></select></label></div>
           <label>性别<select name="gender"><option>男</option><option>女</option><option>不限定</option></select></label>
-          <label>五行规则<select name="rule_version"><option value="missing_v1">缺失补足 v1</option><option value="seasonal_v2">月令平衡 v2</option></select></label>
-          <label>评分版本<select name="score_version"><option value="balanced_v1">综合均衡 v1</option><option value="element_v2">五行侧重 v2</option></select></label>
           <div class="ai-consent-note">提交后仅向模型发送姓名、四柱、五行计数和评分，不发送公历生日原值和精确出生时间。</div>
           <button class="primary wide">开始 AI 语义体检</button>
         </form>

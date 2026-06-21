@@ -6,3 +6,4 @@ python-installer.exe
 gh*.zip
 gh*.msi
 server*.log
+.cache/

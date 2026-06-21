@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from collections import Counter
 from pathlib import Path
 from unittest.mock import patch
 
@@ -16,8 +17,6 @@ class ShimingTests(unittest.TestCase):
             "birth": "2023-01-25",
             "birth_time": "17:00",
             "gender": "girl",
-            "rule_version": "missing_v1",
-            "score_version": "balanced_v1",
         }
 
     def tearDown(self):
@@ -30,13 +29,28 @@ class ShimingTests(unittest.TestCase):
         score = app.score_name({**self.base, "name": candidate["name"], "gender": "女"})
         self.assertEqual(candidate["score"], score["score"])
 
-    def test_rule_and_score_versions(self):
-        missing = app.score_name({**self.base, "name": "曹安宁"})
-        seasonal = app.score_name({**self.base, "name": "曹安宁", "rule_version": "seasonal_v2",
-                                   "score_version": "element_v2"})
-        self.assertEqual("missing_v1", missing["bazi"]["rule_version"])
-        self.assertEqual("seasonal_v2", seasonal["bazi"]["rule_version"])
-        self.assertEqual("element_v2", seasonal["calculation"]["score_version"])
+    def test_generated_names_are_diverse_and_include_risk(self):
+        result = app.generate_names({**self.base, "surname": "曹", "style": "elegant", "nonce": "diverse"})
+        given_chars = [char for item in result["names"] for char in app.split_full_name(item["name"])[1]]
+        self.assertEqual(10, len(result["names"]))
+        self.assertGreaterEqual(len(set(given_chars)), 12)
+        self.assertLessEqual(max(Counter(given_chars).values()), 2)
+        self.assertTrue(all("duplicate_risk" in item for item in result["names"]))
+        self.assertGreater(result["strategy"]["character_pool_size"], 200)
+        self.assertEqual(8105, result["strategy"]["base_character_count"])
+        self.assertGreaterEqual(result["strategy"]["eligible_character_count"], 800)
+        self.assertTrue(all(not (set(app.split_full_name(item["name"])[1]) & app.MASCULINE_CHARS)
+                            for item in result["names"]))
+
+    def test_birth_date_and_style_change_recommendations(self):
+        common = {"surname": "曹", "birth_time": "17:00", "gender": "girl", "nonce": "same"}
+        june_1 = app.generate_names({**common, "birth": "2025-06-01", "style": "elegant"})
+        june_3 = app.generate_names({**common, "birth": "2025-06-03", "style": "elegant"})
+        bright = app.generate_names({**common, "birth": "2025-06-01", "style": "bright"})
+        names_1 = {item["name"] for item in june_1["names"]}
+        self.assertNotEqual(names_1, {item["name"] for item in june_3["names"]})
+        self.assertNotEqual(names_1, {item["name"] for item in bright["names"]})
+        self.assertTrue(all(item["style_matches"] >= 1 for item in bright["names"]))
 
     def test_history_is_opt_in(self):
         app.score_name({**self.base, "name": "曹安宁"})
@@ -82,6 +96,10 @@ class ShimingTests(unittest.TestCase):
         self.assertIn('id="ai-page-result"', html)
         self.assertNotIn('id="ai-score-result"', script)
         self.assertNotIn('ai-candidate-', script)
+        self.assertNotIn('name="rule_version"', html)
+        self.assertNotIn('name="score_version"', html)
+        self.assertNotIn("rule_version", script)
+        self.assertNotIn("score_version", script)
 
 
 if __name__ == "__main__":

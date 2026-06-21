@@ -79,16 +79,72 @@ CHAR_INFO = {
     "凡": (3, "水", "质朴笃实"), "渝": (12, "水", "坚定不改"),
 }
 
+# 可用于组合起名的人工校订字库。五行归类属于本产品采用的姓名学规则，
+# 笔画使用简体常用字笔画；不把未收录字随机归类。
+CHAR_INFO.update({
+    "柏": (9, "木", "坚韧常青"), "松": (8, "木", "坚贞长青"), "枫": (8, "木", "明朗洒脱"),
+    "楚": (13, "木", "清晰端正"), "萱": (12, "木", "温雅明媚"), "芮": (7, "木", "柔韧新生"),
+    "芙": (7, "木", "清雅秀美"), "芸": (7, "木", "勤勉芬芳"), "莉": (10, "木", "清雅芳洁"),
+    "蕙": (15, "木", "蕙质兰心"), "竹": (6, "木", "虚心有节"), "筠": (13, "木", "温润有节"),
+    "筱": (13, "木", "清秀坚韧"), "朵": (6, "木", "自然明媚"), "杉": (7, "木", "挺拔质朴"),
+    "柯": (9, "木", "端正有则"), "柳": (9, "木", "柔韧清新"), "棋": (12, "木", "沉着善思"),
+    "启": (7, "木", "启明开拓"), "隽": (10, "木", "才思出众"),
+    "明": (8, "火", "光明通达"), "旭": (6, "火", "旭日初升"), "曦": (20, "火", "晨曦光明"),
+    "曜": (18, "火", "光耀明盛"), "晟": (10, "火", "光明兴盛"), "炜": (8, "火", "光彩鲜明"),
+    "焱": (12, "火", "光华炽盛"), "灿": (7, "火", "灿然明朗"), "炫": (9, "火", "光彩夺目"),
+    "熠": (15, "火", "熠熠生辉"), "暖": (13, "火", "温暖和煦"), "映": (9, "火", "光彩映照"),
+    "昀": (8, "火", "日光温润"), "易": (8, "火", "平和通达"), "丹": (4, "火", "赤诚明丽"),
+    "灵": (7, "火", "灵秀聪敏"), "智": (12, "火", "聪慧明理"), "亭": (9, "火", "端正挺拔"),
+    "光": (6, "火", "光明磊落"), "熙": (14, "火", "和乐光明"),
+    "维": (11, "土", "持守有度"), "轩": (7, "土", "气度轩昂"), "羽": (6, "土", "轻盈高远"),
+    "韵": (13, "土", "气韵雅致"), "恩": (10, "土", "仁厚感恩"), "唯": (11, "土", "专注坚定"),
+    "岩": (8, "土", "坚定稳重"), "岑": (7, "土", "沉静秀拔"), "峰": (10, "土", "卓然向上"),
+    "峻": (10, "土", "高峻正直"), "嵘": (12, "土", "卓越不凡"), "城": (9, "土", "坚实可靠"),
+    "培": (11, "土", "培根厚积"), "均": (7, "土", "平衡公允"), "逸": (11, "土", "从容超逸"),
+    "艾": (5, "土", "美好安康"), "玮": (8, "土", "珍奇美好"), "益": (10, "土", "增益向善"),
+    "友": (4, "土", "友善真诚"), "圣": (5, "土", "明达高尚"),
+    "钧": (9, "金", "公正持衡"), "铠": (11, "金", "坚毅守护"), "铮": (11, "金", "刚正有声"),
+    "钦": (9, "金", "敬慎庄重"), "钊": (7, "金", "勉励进取"), "锴": (14, "金", "刚健端正"),
+    "锟": (13, "金", "坚韧如玉"), "锶": (14, "金", "沉静坚韧"), "铃": (10, "金", "清越灵动"),
+    "钟": (9, "金", "专注凝聚"), "鑫": (24, "金", "兴盛丰足"), "成": (6, "金", "有志竟成"),
+    "承": (8, "金", "担当传承"), "诚": (8, "金", "真诚守信"), "思": (9, "金", "善思明辨"),
+    "如": (6, "金", "从容如意"), "素": (10, "金", "质朴纯真"), "紫": (12, "金", "典雅庄重"),
+    "靖": (13, "金", "安定恭谨"), "静": (14, "金", "沉静从容"), "纯": (7, "金", "纯粹真诚"),
+    "正": (5, "金", "正直端方"), "则": (6, "金", "有原则有分寸"),
+    "洋": (9, "水", "开阔丰盛"), "浩": (10, "水", "浩然广阔"), "海": (10, "水", "胸怀宽广"),
+    "润": (10, "水", "温润泽物"), "淳": (11, "水", "淳厚质朴"), "渊": (11, "水", "渊博深沉"),
+    "潇": (14, "水", "潇洒清朗"), "湘": (12, "水", "灵秀悠远"), "洁": (9, "水", "洁净正直"),
+    "沁": (7, "水", "清新沁润"), "泉": (9, "水", "源远流长"), "波": (8, "水", "灵动进取"),
+    "涛": (10, "水", "气势进取"), "潮": (15, "水", "蓬勃有势"), "霏": (16, "水", "轻盈润泽"),
+    "露": (21, "水", "清莹坦荡"), "雪": (11, "水", "澄澈纯洁"), "霞": (17, "水", "绚丽舒展"),
+    "文": (4, "水", "文雅有识"), "斐": (12, "水", "文采出众"), "鸿": (11, "水", "志向高远"),
+    "鸣": (8, "水", "一鸣有声"), "澄": (15, "水", "澄明通透"),
+})
+
+CHAR_DATA_PATH = ROOT / "data" / "naming_characters.json"
+CHAR_DATA = json.loads(CHAR_DATA_PATH.read_text(encoding="utf-8")) if CHAR_DATA_PATH.exists() else {
+    "base_character_count": len(CHAR_INFO), "eligible_character_count": len(CHAR_INFO),
+    "sources": [], "characters": {},
+}
+BASE_CHAR_INFO = CHAR_DATA.get("characters", {})
+CHAR_SOURCES = {char: "项目人工校订姓名字库" for char in CHAR_INFO}
+for char, item in BASE_CHAR_INFO.items():
+    if item.get("name_eligible") and item.get("element") in ELEMENTS and item.get("meaning"):
+        if char not in CHAR_INFO:
+            CHAR_INFO[char] = (int(item["strokes"]), item["element"], item["meaning"])
+        CHAR_SOURCES.setdefault(char, item.get("source", "离线规范汉字数据"))
+
 NAMING_CHARS = {
     element: [char for char, info in CHAR_INFO.items() if info[1] == element]
     for element in ELEMENTS
 }
-FEMININE_CHARS = set("芊芷晴晗彤依岚怡诗悦汐若棠月")
-MASCULINE_CHARS = set("岳坤垚锐铄卓朗砚舟")
+FEMININE_CHARS = set("丽仪伊俐俪倩依妍妙妤妮姿娅娜娟娴婉婕婷媛嫣姝姣姬娉婧嫒嫦媚嬿彩彤怡悦惠慧晴晶暖燕爱玥玲珊珍珞珠琬琳琴琼瑄瑛瑶璇璐美芊芷若棠月萱芮芙芸莉蕙筱朵丹灵艾铃如静沁霏露雪霞雯霓香馥馨")
+MASCULINE_CHARS = set("伟俊健军刚力功勇勋卓国坚坤城培壮宇宏宗宝富尧山岩岳岸峰峻崇嵘帅建弘强彬彪彰征振政斌旭昂昊晟晋朗栋梁森楷正武毅涛瀚炎炜焱煊皓磊禹立翰耀腾舜舟豪超跃轩辉达迈远钊钧铠铮锐锴锟隆雄骁骐骞骥鸿鹏鹤麟钧铠铮钊锴锟成承正浩海潮鸣松柏砚")
 STYLE_CHARS = {
-    "elegant": set("清舒诗芷若桐茗岚溪洛月宁晏珩"),
-    "bright": set("昕昭晴晨煜烨彤夏南昱朗景卓泽"),
-    "learned": set("知书砚铭景嘉言瑾怀珩茗")
+    "elegant": set("清舒诗芷若桐茗岚溪洛月宁珩萱芙芸蕙竹筠筱柳韵逸铃如素静沁霏雪澄"),
+    "bright": set("昕昭晴晨煜烨彤夏南昱朗景卓泽明旭曦曜晟炜灿炫熠映昀光熙")
+              | set("启枫乔森栩棠辰宇轩羽峰玮锦星悦瑞铃铄澜霖霞洋潇鸿鸣潮"),
+    "learned": set("知书砚铭景嘉言瑾怀珩茗楚棋隽智维思承诚靖文斐渊淳正则")
 }
 GENERATES = {"木": "火", "火": "土", "土": "金", "金": "水", "水": "木"}
 
@@ -203,7 +259,7 @@ def parse_birth_time(value: object) -> tuple[int, int]:
         raise ValueError("请选择准确的出生时辰") from exc
 
 
-def calculate_bazi(birth: date, birth_time: tuple[int, int], rule_version: str = "missing_v1") -> dict:
+def calculate_bazi(birth: date, birth_time: tuple[int, int]) -> dict:
     """通过 lunar-python 的节气万年历排四柱，按八个干支本气统计五行。"""
     hour, minute = birth_time
     solar = Solar.fromYmdHms(birth.year, birth.month, birth.day, hour, minute, 0)
@@ -217,15 +273,7 @@ def calculate_bazi(birth: date, birth_time: tuple[int, int], rule_version: str =
         counts[BRANCH_ELEMENT[pillar[1]]] += 1
     seasonal = BRANCH_ELEMENT[pillars[1][1]]
     missing = [element for element in ELEMENTS if counts[element] == 0]
-    if rule_version not in ("missing_v1", "seasonal_v2"):
-        raise ValueError("五行规则版本不正确")
-    if rule_version == "seasonal_v2":
-        weighted = {key: value + (2 if key == seasonal else 0) for key, value in counts.items()}
-        minimum = min(weighted.values())
-        favorable = [element for element in ELEMENTS if weighted[element] == minimum][:2]
-        required_elements = []
-        rule = "月令加权平衡：月令旺气加权后取最少项"
-    elif missing:
+    if missing:
         favorable = missing
         required_elements = missing[:2]
         rule = "缺失五行直接补足"
@@ -236,7 +284,7 @@ def calculate_bazi(birth: date, birth_time: tuple[int, int], rule_version: str =
         rule = "五行齐全，取数量最少项"
     return {"pillars": pillars, "counts": counts, "day_master": STEM_ELEMENT[pillars[2][0]],
             "seasonal": seasonal, "missing": missing, "favorable": favorable, "rule": rule,
-            "required_elements": required_elements, "rule_version": rule_version,
+            "required_elements": required_elements,
             "lunar_date": lunar.toString(), "calendar_source": "lunar-python 1.4.8"}
 
 
@@ -263,7 +311,13 @@ def _external_char_profile(char: str) -> tuple[int, str, str, str] | None:
 
 def char_profile(char: str) -> tuple[int, str, str, str]:
     if char in CHAR_INFO:
-        return (*CHAR_INFO[char], "内置姓名字库")
+        return (*CHAR_INFO[char], CHAR_SOURCES.get(char, "内置姓名字库"))
+    if char in BASE_CHAR_INFO:
+        item = BASE_CHAR_INFO[char]
+        if item.get("element") not in ELEMENTS:
+            raise ValueError(f"基础字库已收录“{char}”，但公开数据未提供五行，无法在不猜测的前提下评分")
+        return (int(item["strokes"]), item["element"], item.get("meaning") or "规范汉字",
+                item.get("source", "离线规范汉字数据"))
     if char in COMMON_SURNAME_STROKES:
         strokes = COMMON_SURNAME_STROKES[char]
         last = strokes % 10
@@ -298,15 +352,14 @@ def normalize_gender(value: str) -> str:
 
 
 def evaluate_name(name: str, birth: date, birth_time: tuple[int, int], gender: str,
-                  bazi: dict | None = None, rule_version: str = "missing_v1",
-                  score_version: str = "balanced_v1") -> dict:
+                  bazi: dict | None = None) -> dict:
     """唯一姓名评分入口；所有指标确定性计算，禁止随机数和风格加分。"""
     _, given = split_full_name(name)
     if not given:
         raise ValueError("请输入包含名字的完整姓名")
     profiles = [char_profile(char) for char in name]
     given_profiles = [char_profile(char) for char in given]
-    bazi = bazi or calculate_bazi(birth, birth_time, rule_version)
+    bazi = bazi or calculate_bazi(birth, birth_time)
     trigram = name_trigram(name)
 
     tone_values = []
@@ -337,17 +390,14 @@ def evaluate_name(name: str, birth: date, birth_time: tuple[int, int], gender: s
 
     trigram_matches = sum(element in bazi["favorable"] for element in trigram["elements"])
     trigram_score = min(96, 78 + trigram_matches * 9)
-    weights = {"balanced_v1": (.18, .14, .18, .35, .15), "element_v2": (.15, .12, .15, .43, .15)}
-    if score_version not in weights:
-        raise ValueError("评分规则版本不正确")
-    w = weights[score_version]
+    w = (.18, .14, .18, .35, .15)
     total = round(pronunciation * w[0] + shape * w[1] + meaning * w[2] + element_score * w[3] + trigram_score * w[4])
     return {"score": total, "metrics": {"音韵": pronunciation, "字形": shape, "寓意": meaning,
                                            "五行": element_score, "卦象": trigram_score},
             "bazi": bazi, "trigram": trigram, "name_elements": name_elements,
             "given_elements": given_elements, "tones": tone_values, "strokes": strokes,
             "character_sources": {char: profile[3] for char, profile in zip(name, profiles)},
-            "gender": normalize_gender(gender), "score_version": score_version, "weights": w}
+            "gender": normalize_gender(gender), "weights": w}
 
 
 def score_name(data: dict) -> dict:
@@ -355,9 +405,7 @@ def score_name(data: dict) -> dict:
     birth = parse_birth(data.get("birth"))
     birth_time = parse_birth_time(data.get("birth_time"))
     gender = normalize_gender(str(data.get("gender", "不限定")))
-    rule_version = str(data.get("rule_version", "missing_v1"))
-    score_version = str(data.get("score_version", "balanced_v1"))
-    assessment = evaluate_name(name, birth, birth_time, gender, rule_version=rule_version, score_version=score_version)
+    assessment = evaluate_name(name, birth, birth_time, gender)
     bazi, trigram = assessment["bazi"], assessment["trigram"]
     total, name_elements = assessment["score"], assessment["name_elements"]
     meanings = [CHAR_INFO[c][2] for c in name if c in CHAR_INFO]
@@ -367,13 +415,59 @@ def score_name(data: dict) -> dict:
         "metrics": assessment["metrics"],
         "bazi": bazi, "name_elements": name_elements, "trigram": trigram,
         "calculation": {"tones": assessment["tones"], "strokes": assessment["strokes"],
-                        "score_version": score_version, "weights": assessment["weights"],
-                        "character_sources": assessment["character_sources"]},
+                        "weights": assessment["weights"], "character_sources": assessment["character_sources"]},
         "summary": "、".join(meanings) if meanings else "读音流畅，结构协调，具有良好的日常辨识度",
         "advice": f"四柱五行计数为{'、'.join(f'{key}{value}' for key, value in bazi['counts'].items())}；按“{bazi['rule']}”规则，本次补“{'、'.join(bazi['favorable'])}”。姓名用字为“{'、'.join(name_elements)}”，主卦为{trigram['name']}。",
     }
     save_history("score", name, result, bool(data.get("_store_history")))
     return result
+
+
+def duplicate_risk_profile(name: str) -> dict:
+    """本地透明规则评估组合稀有度；生成阶段调用时不会触发外部人口接口。"""
+    surname, given = split_full_name(name)
+    signals = []
+    score = 8
+    if surname in VERY_COMMON_SURNAMES:
+        score += 24
+        signals.append(f"姓氏“{surname}”属于常见姓氏，重名基础概率较高")
+    else:
+        score += 8
+        signals.append(f"姓氏“{surname}”不在内置常见姓氏档，重名风险相对较低")
+    popular = [char for char in given if char in COMMON_GIVEN_CHARS]
+    if popular:
+        score += len(popular) * 18
+        signals.append(f"名字中有{len(popular)}个常见起名字：{'、'.join(popular)}")
+    else:
+        signals.append("名字用字未命中内置高频起名字表")
+    if len(given) == 1:
+        score += 20
+        signals.append("单字名组合空间较小，通常更容易重名")
+    elif len(given) >= 2:
+        score += 4
+        signals.append("双字名或多字名组合空间较大")
+    if len(set(given)) < len(given):
+        score += 8
+        signals.append("名字包含叠字，常见组合风险增加")
+    if name in VERY_COMMON_FULL_NAMES:
+        score += 25
+        signals.append("完整姓名命中内置常见姓名表")
+    score = min(100, score)
+    if score >= 80:
+        level, label = "very_high", "很高"
+    elif score >= 60:
+        level, label = "high", "较高"
+    elif score >= 40:
+        level, label = "medium", "中等"
+    elif score >= 25:
+        level, label = "low", "较低"
+    else:
+        level, label = "very_low", "很低"
+    confidence = "中" if name in VERY_COMMON_FULL_NAMES or popular else "低"
+    return {"mode": "risk", "name": name, "score": score, "level": level, "label": label,
+            "confidence": confidence, "signals": signals,
+            "method": "姓氏分档 + 高频用字 + 名字长度 + 叠字 + 常见完整姓名",
+            "disclaimer": "这是组合稀有度风险评估，不是公安人口查询，不提供虚构的同名人数。"}
 
 
 def generate_names(data: dict) -> dict:
@@ -383,15 +477,13 @@ def generate_names(data: dict) -> dict:
     gender = str(data.get("gender", "neutral"))
     style = str(data.get("style", "elegant"))
     fixed_char = str(data.get("fixed_char", "")).strip()
-    rule_version = str(data.get("rule_version", "missing_v1"))
-    score_version = str(data.get("score_version", "balanced_v1"))
     if gender not in ("boy", "girl", "neutral") or style not in STYLE_CHARS:
         raise ValueError("性别或风格选项不正确")
     if fixed_char:
         if len(fixed_char) != 1 or not re.fullmatch(r"[\u3400-\u9fff]", fixed_char):
             raise ValueError("指定用字必须是一个中文汉字")
         char_profile(fixed_char)
-    bazi = calculate_bazi(birth, birth_time, rule_version)
+    bazi = calculate_bazi(birth, birth_time)
     favorable = bazi["favorable"]
     supporting = [source for source, target in GENERATES.items() if target in favorable]
     allowed_elements = set(favorable + supporting)
@@ -403,7 +495,8 @@ def generate_names(data: dict) -> dict:
     if fixed_char and fixed_char not in chars:
         chars.append(fixed_char)
     nonce = str(data.get("nonce", ""))
-    rng = random.Random(stable_seed(f"{surname}:{birth}:{birth_time}:{gender}:{style}:{nonce}"))
+    bazi_signature = ":".join(bazi["pillars"])
+    rng = random.Random(stable_seed(f"{surname}:{bazi_signature}:{birth_time}:{gender}:{style}:{nonce}"))
     raw_candidates = []
     for first in chars:
         for second in chars:
@@ -416,32 +509,54 @@ def generate_names(data: dict) -> dict:
             if not required and not any(element in favorable for element in elements):
                 continue
             style_matches = sum(char in STYLE_CHARS[style] for char in (first, second))
+            # 气质是推荐筛选条件，不进入通用姓名评分。不同气质必须命中对应字池。
+            if style_matches == 0:
+                continue
             fixed_match = 1 if fixed_char and fixed_char in (first, second) else 0
+            if fixed_char and not fixed_match:
+                continue
             corpus_rank = int(NAME_CORPUS.get("bigrams", {}).get(first + second, 0))
-            raw_candidates.append((first, second, elements, style_matches, fixed_match, corpus_rank))
-
-    # 风格只用于缩小候选范围，不进入评分；限制精评数量以避免重复拼音计算。
-    rng.shuffle(raw_candidates)
-    raw_candidates.sort(key=lambda item: (item[4], item[3], item[5]), reverse=True)
-    candidates = []
-    for first, second, elements, style_matches, fixed_match, corpus_rank in raw_candidates[:120]:
             full_name = surname + first + second
-            assessment = evaluate_name(full_name, birth, birth_time, gender, bazi=bazi,
-                                       rule_version=rule_version, score_version=score_version)
+            # 完整四柱参与确定性择名；相邻日期的日柱不同，会得到不同的优先序。
+            birth_affinity = stable_seed(f"{bazi_signature}:{full_name}") % 1000 / 1000
+            raw_candidates.append((first, second, elements, style_matches, fixed_match, corpus_rank, birth_affinity))
+
+    # 先按气质、语料自然度和完整八字确定性择优，再精评一个较大的候选池。
+    rng.shuffle(raw_candidates)
+    raw_candidates.sort(key=lambda item: (item[4], item[3], min(item[5], 100), item[6]), reverse=True)
+    candidates = []
+    for first, second, elements, style_matches, fixed_match, corpus_rank, birth_affinity in raw_candidates[:500]:
+            full_name = surname + first + second
+            assessment = evaluate_name(full_name, birth, birth_time, gender, bazi=bazi)
             meaning = f"{char_profile(first)[2]}，{char_profile(second)[2]}"
             warnings = [term for term in NAME_CORPUS.get("ambiguous_terms", []) if term and term in full_name]
+            risk = duplicate_risk_profile(full_name)
+            quality = (assessment["score"] - risk["score"] * .16 + style_matches * 2
+                       + min(corpus_rank, 100) * .015 + birth_affinity * 3 - len(warnings) * 10)
             candidates.append({"name": full_name, "score": assessment["score"], "meaning": meaning,
                                "elements": elements, "trigram": assessment["trigram"]["name"],
                                "corpus_frequency": corpus_rank, "ambiguity_warnings": warnings,
-                               "_style_rank": style_matches, "_fixed_rank": fixed_match})
-    candidates.sort(key=lambda item: (not item["ambiguity_warnings"], item["_fixed_rank"], item["_style_rank"], item["corpus_frequency"], item["score"]), reverse=True)
-    # 在高匹配候选中随机抽取，既保持五行质量，也让“重新生成”产生新结果。
-    top_candidates = candidates[:min(60, len(candidates))]
-    rng.shuffle(top_candidates)
-    results = sorted(top_candidates[:10], key=lambda item: item["score"], reverse=True)
+                               "duplicate_risk": {"score": risk["score"], "level": risk["level"], "label": risk["label"]},
+                               "style_matches": style_matches, "_quality": quality})
+
+    # 逐个选择并惩罚已经出现过的字，避免十个名字围绕两三个高分字来回组合。
+    results, remaining, usage = [], candidates[:], {}
+    while remaining and len(results) < 10:
+        eligible = [item for item in remaining if all(
+            char == fixed_char or usage.get(char, 0) < 2
+            for char in split_full_name(item["name"])[1]
+        )]
+        pool = eligible or remaining
+        best = max(pool, key=lambda item: item["_quality"]
+                   - sum(usage.get(char, 0) * 10 for char in split_full_name(item["name"])[1]
+                         if char != fixed_char))
+        results.append(best)
+        remaining.remove(best)
+        for char in split_full_name(best["name"])[1]:
+            usage[char] = usage.get(char, 0) + 1
+    results.sort(key=lambda item: (item["score"], -item["duplicate_risk"]["score"]), reverse=True)
     for item in results:
-        item.pop("_style_rank", None)
-        item.pop("_fixed_rank", None)
+        item.pop("_quality", None)
     missing_text = "、".join(bazi["missing"]) if bazi["missing"] else "无"
     favorable_text = "、".join(favorable)
     support_text = "、".join(supporting) if supporting else "无"
@@ -455,7 +570,11 @@ def generate_names(data: dict) -> dict:
         analysis += f" 已将“{fixed_char}”设为优先用字；在不破坏补五行和质量要求的前提下尽量采用。"
     strategy = {"analysis": analysis, "required": bazi["required_elements"],
                 "recommended": favorable, "supporting": supporting, "fixed_char": fixed_char,
-                "rule_version": rule_version, "score_version": score_version,
+                "style": style, "character_pool_size": len(chars),
+                "base_character_count": int(CHAR_DATA.get("base_character_count", len(BASE_CHAR_INFO))),
+                "eligible_character_count": len(CHAR_INFO),
+                "valid_combinations": len(raw_candidates), "evaluated_candidates": len(candidates),
+                "diversity_note": "气质命中字池后，按完整四柱择优，并限制推荐列表中的重复用字",
                 "corpus_source": NAME_CORPUS.get("source", "未配置授权姓名语料")}
     result = {"surname": surname, "bazi": bazi, "strategy": strategy, "names": results}
     save_history("naming", surname, result, bool(data.get("_store_history")))
@@ -494,51 +613,7 @@ def population(data: dict) -> dict:
             return result
         except (HTTPError, URLError, TimeoutError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
             raise ValueError("授权人口 API 未返回有效的总人数和数据来源") from exc
-    surname_length = 2 if name[:2] in ("欧阳", "司马", "上官", "诸葛", "东方", "皇甫", "尉迟", "公孙", "慕容", "司徒") else 1
-    surname, given = name[:surname_length], name[surname_length:]
-    signals = []
-    score = 8
-    if surname in VERY_COMMON_SURNAMES:
-        score += 24
-        signals.append(f"姓氏“{surname}”属于常见姓氏，重名基础概率较高")
-    else:
-        score += 8
-        signals.append(f"姓氏“{surname}”不在内置常见姓氏档，重名风险相对较低")
-    popular_count = sum(char in COMMON_GIVEN_CHARS for char in given)
-    if popular_count:
-        score += popular_count * 18
-        signals.append(f"名字中有{popular_count}个常见起名字：{'、'.join(char for char in given if char in COMMON_GIVEN_CHARS)}")
-    else:
-        signals.append("名字用字未命中内置高频起名字表")
-    if len(given) == 1:
-        score += 20
-        signals.append("单字名组合空间较小，通常更容易重名")
-    elif len(given) >= 2:
-        score += 4
-        signals.append("双字名或多字名组合空间较大")
-    if len(set(given)) < len(given):
-        score += 8
-        signals.append("名字包含叠字，常见组合风险增加")
-    if name in VERY_COMMON_FULL_NAMES:
-        score += 25
-        signals.append("完整姓名命中内置常见姓名表")
-    score = min(100, score)
-    if score >= 80:
-        level, label = "very_high", "很高"
-    elif score >= 60:
-        level, label = "high", "较高"
-    elif score >= 40:
-        level, label = "medium", "中等"
-    elif score >= 25:
-        level, label = "low", "较低"
-    else:
-        level, label = "very_low", "很低"
-    known_chars = sum(char in COMMON_GIVEN_CHARS for char in given)
-    confidence = "中" if name in VERY_COMMON_FULL_NAMES or known_chars else "低"
-    result = {"mode": "risk", "name": name, "score": score, "level": level, "label": label,
-              "confidence": confidence, "signals": signals,
-              "method": "姓氏分档 + 高频用字 + 名字长度 + 叠字 + 常见完整姓名",
-              "disclaimer": "这是组合稀有度风险评估，不是公安人口查询，不提供虚构的同名人数。"}
+    result = duplicate_risk_profile(name)
     save_history("duplicate_risk", name, result, bool(data.get("_store_history")))
     return result
 
